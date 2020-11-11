@@ -28,8 +28,7 @@ app.get("/db", async (req, res) => {
   try {
     const client = await connection.connect();
     const result = await client.query("SELECT * FROM user_table");
-    const results = { results: result ? result.rows : null };
-    res.send(results);
+    res.send(result);
     client.release();
   } catch (err) {
     console.error(err);
