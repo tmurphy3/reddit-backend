@@ -10,7 +10,6 @@ app.use(express.json()); // allows access to req.body
 //routes
 
 // get all users
-
 app.get("/users", async (req, res) => {
   try {
     const allUsers = await pool.query("SELECT * FROM user_table");
@@ -19,7 +18,20 @@ app.get("/users", async (req, res) => {
     console.error(err.message);
   }
 });
+
 // get one user
+app.get("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await pool.query(
+      "SELECT * FROM user_table WHERE user_id = $1",
+      [id]
+    );
+    res.json(user.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // create user
 app.post("/users", async (req, res) => {
