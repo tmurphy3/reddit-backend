@@ -2,12 +2,18 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const { send } = require("process");
 
 //middleware
 app.use(cors());
 app.use(express.json()); // allows access to req.body
 
 //routes
+
+// home
+app.get("/", (req, res) => {
+  res.send("Welcome");
+});
 
 // get all users
 app.get("/users", async (req, res) => {
