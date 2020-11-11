@@ -47,6 +47,35 @@ app.post("/users", async (req, res) => {
   }
 });
 
+// update user, we wont use this for users though
+app.put("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { email } = req.body;
+    const updatedUser = await pool.query(
+      "UPDATE user_table SET email = $1 WHERE user_id = $2",
+      [email, id]
+    );
+    res.json("User was updated");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete a user
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteUser = await pool.query(
+      "DELETE FROM user_table WHERE user_id = $1",
+      [id]
+    );
+    res.json("User was deleted");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
