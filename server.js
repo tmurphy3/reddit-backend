@@ -3,16 +3,38 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const { send } = require("process");
+const { Pool } = require("pg");
 
 //middleware
 app.use(cors());
 app.use(express.json()); // allows access to req.body
 
-//routes
+// connection
+const connection = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
+//routes
 // home
 app.get("/", (req, res) => {
   res.send("Welcome");
+});
+
+// connection
+app.get("/db", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const result = await client.query("SELECT * FROM user_table");
+    const results = { results: result ? result.rows : null };
+    res.render("pages/db", results);
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
 });
 
 // get all users
