@@ -10,27 +10,24 @@ app.use(express.json()); // allows access to req.body
 
 // heroku connection
 
-const { Client } = require("pg");
+const query = `
+SELECT *
+FROM user_tables
+`;
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
-client.connect();
-
-client.query(
-  "SELECT table_schema,table_name FROM information_schema.tables;",
-  (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
+pool.connect((err, client, done) => {
+  if (err) throw err;
+  client.query(query, (err, res) => {
+    done();
+    if (err) {
+      console.log(err.stack);
+    } else {
+      for (let row of res.rows) {
+        console.log(row);
+      }
     }
-    client.end();
-  }
-);
+  });
+});
 
 //routes
 
