@@ -3,10 +3,35 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const { send } = require("process");
+const client = require("./heroku_connection");
 
 //middleware
 app.use(cors());
 app.use(express.json()); // allows access to req.body
+
+// heroku connection
+
+const { Client } = require("pg");
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+client.connect();
+
+client.query(
+  "SELECT table_schema,table_name FROM information_schema.tables;",
+  (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  }
+);
 
 //routes
 
