@@ -53,8 +53,10 @@ app.post("/dbx", async (req, res) => {
 // get all users
 app.get("/users", async (req, res) => {
   try {
-    const allUsers = await pool.query("SELECT * FROM user_table");
+    const client = await connection.connect();
+    const allUsers = await client.query("SELECT * FROM user_table");
     res.json(allUsers.rows);
+    client.release();
   } catch (err) {
     console.error(err.message);
   }
@@ -63,12 +65,15 @@ app.get("/users", async (req, res) => {
 // get one user
 app.get("/users/:id", async (req, res) => {
   try {
+    const client = await connection.connect();
+
     const { id } = req.params;
     const user = await pool.query(
       "SELECT * FROM user_table WHERE user_id = $1",
       [id]
     );
     res.json(user.rows);
+    client.release();
   } catch (err) {
     console.error(err.message);
   }
@@ -77,12 +82,15 @@ app.get("/users/:id", async (req, res) => {
 // create user
 app.post("/users", async (req, res) => {
   try {
+    const client = await connection.connect();
+
     const { email } = req.body;
     const newUser = await pool.query(
       "INSERT INTO user_table (email) VALUES ($1) RETURNING *",
       [email]
     );
     res.json(newUser.rows[0]);
+    client.release();
   } catch (err) {
     console.error(err.message);
   }
@@ -91,6 +99,8 @@ app.post("/users", async (req, res) => {
 // update user, we wont use this for users though
 app.put("/users/:id", async (req, res) => {
   try {
+    const client = await connection.connect();
+
     const { id } = req.params;
     const { email } = req.body;
     const updatedUser = await pool.query(
@@ -98,6 +108,7 @@ app.put("/users/:id", async (req, res) => {
       [email, id]
     );
     res.json("User was updated");
+    client.release();
   } catch (err) {
     console.error(err.message);
   }
@@ -106,12 +117,15 @@ app.put("/users/:id", async (req, res) => {
 // delete a user
 app.delete("/users/:id", async (req, res) => {
   try {
+    const client = await connection.connect();
+
     const { id } = req.params;
     const deleteUser = await pool.query(
       "DELETE FROM user_table WHERE user_id = $1",
       [id]
     );
     res.json("User was deleted");
+    client.release();
   } catch (err) {
     console.error(err.message);
   }
