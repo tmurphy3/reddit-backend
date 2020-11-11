@@ -3,7 +3,6 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const { send } = require("process");
-const client = require("./heroku_connection");
 
 //middleware
 app.use(cors());
