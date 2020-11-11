@@ -1,0 +1,10 @@
+CREATE DATABASE reddit;
+CREATE USER reddit_user WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE reddit TO reddit_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO reddit_user;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to reddit_user;
+
+CREATE TABLE user_table(
+    user_id SERIAL PRIMARY KEY,
+    email VARCHAR(255)
+);
