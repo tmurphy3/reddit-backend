@@ -23,33 +23,6 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-// connection
-app.get("/db", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const result = await client.query("SELECT * FROM user_table");
-    res.send(result);
-    client.release();
-  } catch (err) {
-    console.error(err);
-    res.send("Error " + err);
-  }
-});
-
-app.post("/dbx", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const email = "test.gmail";
-    const newUser = await client.query(
-      "INSERT INTO user_table (email) VALUES ($1) RETURNING *",
-      [email]
-    );
-    res.json(newUser.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
 // get all users
 app.get("/users", async (req, res) => {
   try {
