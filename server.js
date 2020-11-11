@@ -68,7 +68,7 @@ app.get("/users/:id", async (req, res) => {
     const client = await connection.connect();
 
     const { id } = req.params;
-    const user = await pool.query(
+    const user = await client.query(
       "SELECT * FROM user_table WHERE user_id = $1",
       [id]
     );
@@ -83,9 +83,8 @@ app.get("/users/:id", async (req, res) => {
 app.post("/users", async (req, res) => {
   try {
     const client = await connection.connect();
-
     const { email } = req.body;
-    const newUser = await pool.query(
+    const newUser = await client.query(
       "INSERT INTO user_table (email) VALUES ($1) RETURNING *",
       [email]
     );
@@ -103,7 +102,7 @@ app.put("/users/:id", async (req, res) => {
 
     const { id } = req.params;
     const { email } = req.body;
-    const updatedUser = await pool.query(
+    const updatedUser = await client.query(
       "UPDATE user_table SET email = $1 WHERE user_id = $2",
       [email, id]
     );
@@ -120,7 +119,7 @@ app.delete("/users/:id", async (req, res) => {
     const client = await connection.connect();
 
     const { id } = req.params;
-    const deleteUser = await pool.query(
+    const deleteUser = await client.query(
       "DELETE FROM user_table WHERE user_id = $1",
       [id]
     );
