@@ -8,27 +8,6 @@ const { send } = require("process");
 app.use(cors());
 app.use(express.json()); // allows access to req.body
 
-// heroku connection
-
-const query = `
-SELECT *
-FROM user_tables
-`;
-
-pool.connect((err, client, done) => {
-  if (err) throw err;
-  client.query(query, (err, res) => {
-    done();
-    if (err) {
-      console.log(err.stack);
-    } else {
-      for (let row of res.rows) {
-        console.log(row);
-      }
-    }
-  });
-});
-
 //routes
 
 // home
