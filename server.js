@@ -64,6 +64,20 @@ app.post("/posts", async (req, res) => {
   }
 });
 
+app.post("/comments", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { content, upvotes, datetime_created, user_id, post_id } = req.body;
+    const newComment = await client.query(
+      "INSERT INTO comments_table (content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [content, upvotes, datetime_created, user_id, post_id]
+    );
+    res.json(newComment.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 // home
 app.get("/", (req, res) => {
   res.send("Welcome");

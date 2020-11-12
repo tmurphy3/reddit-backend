@@ -32,3 +32,16 @@ CREATE TABLE posts_table (
         CONSTRAINT subreddit_id FOREIGN KEY (subreddit_id)
     REFERENCES subreddit_table (subreddit_id)
 );
+
+CREATE TABLE comments_table (
+    comment_id SERIAL PRIMARY KEY,
+    user_id int,
+    post_id int,
+    content VARCHAR(500),
+    upvotes int,
+    datetime_created timestamp,
+        CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES user_table (user_id),
+        CONSTRAINT post_id FOREIGN KEY (post_id)
+    REFERENCES posts_table (post_id)
+);
