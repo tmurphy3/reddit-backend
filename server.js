@@ -33,6 +33,37 @@ app.post("/subreddits", async (req, res) => {
   }
 });
 
+app.post("/posts", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const {
+      title,
+      content,
+      image_url,
+      upvotes,
+      datetime_created,
+      user_id,
+      subreddit_id,
+    } = req.body;
+    const newPost = await client.query(
+      "INSERT INTO subreddit_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [
+        title,
+        content,
+        image_url,
+        upvotes,
+        datetime_created,
+        user_id,
+        subreddit_id,
+      ]
+    );
+    res.json(newPost.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // home
 app.get("/", (req, res) => {
   res.send("Welcome");

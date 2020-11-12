@@ -11,11 +11,24 @@ CREATE TABLE user_table(
 
 CREATE TABLE subreddit_table (
     subreddit_id SERIAL PRIMARY KEY,
+    user_id int,
     title VARCHAR(40),
     image_url VARCHAR(255),
-    user_id int,
       CONSTRAINT user_id FOREIGN KEY (user_id)
     REFERENCES user_table (user_id)
 );
 
-
+CREATE TABLE post_table (
+    post_id SERIAL PRIMARY KEY,
+    user_id int,
+    subreddit_id int,
+    title VARCHAR(40),
+    content VARCHAR(500),
+    image_url VARCHAR(255),
+    upvotes int,
+    datetime_created timestamp,
+        CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES user_table (user_id),
+        CONSTRAINT subreddit_id FOREIGN KEY (subreddit_id)
+    REFERENCES subreddit_table (subreddit_id)
+);
