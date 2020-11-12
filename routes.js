@@ -13,6 +13,7 @@ routes.get("/", (req, res) => {
   res.send("Welcome");
 });
 
+// users
 // get all users
 routes.get("/users", async (req, res) => {
   try {
@@ -93,6 +94,8 @@ routes.delete("/users/:id", async (req, res) => {
   }
 });
 
+// subreddits
+// create a subreddit
 routes.post("/subreddits", async (req, res) => {
   try {
     const client = await connection.connect();
@@ -108,6 +111,8 @@ routes.post("/subreddits", async (req, res) => {
   }
 });
 
+// posts
+// create a post
 routes.post("/posts", async (req, res) => {
   try {
     const client = await connection.connect();
@@ -139,6 +144,8 @@ routes.post("/posts", async (req, res) => {
   }
 });
 
+// comments
+// create a comment
 routes.post("/comments", async (req, res) => {
   try {
     const client = await connection.connect();
