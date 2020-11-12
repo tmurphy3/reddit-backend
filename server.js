@@ -46,7 +46,7 @@ app.post("/posts", async (req, res) => {
       subreddit_id,
     } = req.body;
     const newPost = await client.query(
-      "INSERT INTO subreddit_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      "INSERT INTO posts_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
         title,
         content,

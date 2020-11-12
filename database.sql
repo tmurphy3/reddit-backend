@@ -18,7 +18,7 @@ CREATE TABLE subreddit_table (
     REFERENCES user_table (user_id)
 );
 
-CREATE TABLE post_table (
+CREATE TABLE posts_table (
     post_id SERIAL PRIMARY KEY,
     user_id int,
     subreddit_id int,
