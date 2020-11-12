@@ -17,7 +17,7 @@ routes.get("/", (req, res) => {
 routes.get("/login", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { email } = req.headers;
+    const email = "test@gmail.com";
     const user = await client.query(
       "SELECT * FROM users_table WHERE user_email = $1",
       [email]
