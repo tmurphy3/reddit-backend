@@ -18,66 +18,6 @@ const connection = new Pool({
 });
 
 //routes
-app.post("/subreddits", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const { title, image_url, user_id } = req.body;
-    const newSubreddit = await client.query(
-      "INSERT INTO subreddit_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
-      [title, image_url, user_id]
-    );
-    res.json(newSubreddit.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-app.post("/posts", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const {
-      title,
-      content,
-      image_url,
-      upvotes,
-      datetime_created,
-      user_id,
-      subreddit_id,
-    } = req.body;
-    const newPost = await client.query(
-      "INSERT INTO posts_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-      [
-        title,
-        content,
-        image_url,
-        upvotes,
-        datetime_created,
-        user_id,
-        subreddit_id,
-      ]
-    );
-    res.json(newPost.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-app.post("/comments", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const { content, upvotes, datetime_created, user_id, post_id } = req.body;
-    const newComment = await client.query(
-      "INSERT INTO comments_table (content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [content, upvotes, datetime_created, user_id, post_id]
-    );
-    res.json(newComment.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
 // home
 app.get("/", (req, res) => {
   res.send("Welcome");
@@ -163,6 +103,68 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
+app.post("/subreddits", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { title, image_url, user_id } = req.body;
+    const newSubreddit = await client.query(
+      "INSERT INTO subreddit_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
+      [title, image_url, user_id]
+    );
+    res.json(newSubreddit.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/posts", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const {
+      title,
+      content,
+      image_url,
+      upvotes,
+      datetime_created,
+      user_id,
+      subreddit_id,
+    } = req.body;
+    const newPost = await client.query(
+      "INSERT INTO posts_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [
+        title,
+        content,
+        image_url,
+        upvotes,
+        datetime_created,
+        user_id,
+        subreddit_id,
+      ]
+    );
+    res.json(newPost.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/comments", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { content, upvotes, datetime_created, user_id, post_id } = req.body;
+    const newComment = await client.query(
+      "INSERT INTO comments_table (content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [content, upvotes, datetime_created, user_id, post_id]
+    );
+    res.json(newComment.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
