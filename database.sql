@@ -15,7 +15,7 @@ CREATE TABLE subreddits_table (
     title VARCHAR(40),
     image_url VARCHAR(255),
       CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES user_table (user_id)
+    REFERENCES users_table (user_id)
 );
 
 CREATE TABLE posts_table (
@@ -28,9 +28,9 @@ CREATE TABLE posts_table (
     upvotes int,
     datetime_created timestamp,
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES user_table (user_id),
+    REFERENCES users_table (user_id),
         CONSTRAINT subreddit_id FOREIGN KEY (subreddit_id)
-    REFERENCES subreddit_table (subreddit_id)
+    REFERENCES subreddits_table (subreddit_id)
 );
 
 CREATE TABLE comments_table (
@@ -41,7 +41,7 @@ CREATE TABLE comments_table (
     upvotes int,
     datetime_created timestamp,
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES user_table (user_id),
+    REFERENCES users_table (user_id),
         CONSTRAINT post_id FOREIGN KEY (post_id)
     REFERENCES posts_table (post_id)
 );
