@@ -18,6 +18,21 @@ const connection = new Pool({
 });
 
 //routes
+app.post("/subreddits", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { title, image_url, user_id } = req.body;
+    const newSubreddit = await client.query(
+      "INSERT INTO subreddit_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
+      [title, image_url, user_id]
+    );
+    res.json(newSubreddit.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // home
 app.get("/", (req, res) => {
   res.send("Welcome");

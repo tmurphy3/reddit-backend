@@ -6,5 +6,16 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to DB_USER;
 
 CREATE TABLE user_table(
     user_id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE
+    email VARCHAR(40) NOT NULL UNIQUE
 );
+
+CREATE TABLE subreddit_table (
+    subreddit_id SERIAL PRIMARY KEY,
+    title VARCHAR(40),
+    image_url VARCHAR(255),
+    user_id int,
+      CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES user_table (user_id)
+);
+
+
