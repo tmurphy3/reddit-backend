@@ -13,6 +13,22 @@ routes.get("/", (req, res) => {
   res.send("Welcome");
 });
 
+// login
+routes.get("/login/:email", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { email } = req.params;
+    const user = await client.query(
+      "SELECT * FROM user_table WHERE user_email = $1",
+      [email]
+    );
+    res.json(user.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // users
 // get all users
 routes.get("/users", async (req, res) => {
