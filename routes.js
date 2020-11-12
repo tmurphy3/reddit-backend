@@ -14,7 +14,7 @@ routes.get("/", (req, res) => {
 });
 
 // login
-routes.get("/login/", async (req, res) => {
+routes.get("/login", async (req, res) => {
   try {
     const client = await connection.connect();
     const { email } = req.headers;
