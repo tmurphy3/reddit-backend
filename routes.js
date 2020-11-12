@@ -19,7 +19,7 @@ routes.get("/login/:email", async (req, res) => {
     const client = await connection.connect();
     const { email } = req.params;
     const user = await client.query(
-      "SELECT * FROM user_table WHERE user_email = $1",
+      "SELECT * FROM users_table WHERE user_email = $1",
       [email]
     );
     res.json(user.rows);
@@ -34,7 +34,7 @@ routes.get("/login/:email", async (req, res) => {
 routes.get("/users", async (req, res) => {
   try {
     const client = await connection.connect();
-    const allUsers = await client.query("SELECT * FROM user_table");
+    const allUsers = await client.query("SELECT * FROM users_table");
     res.json(allUsers.rows);
     client.release();
   } catch (err) {
@@ -49,7 +49,7 @@ routes.get("/users/:id", async (req, res) => {
 
     const { id } = req.params;
     const user = await client.query(
-      "SELECT * FROM user_table WHERE user_id = $1",
+      "SELECT * FROM users_table WHERE user_id = $1",
       [id]
     );
     res.json(user.rows);
@@ -65,7 +65,7 @@ routes.post("/users", async (req, res) => {
     const client = await connection.connect();
     const { email } = req.body;
     const newUser = await client.query(
-      "INSERT INTO user_table (email) VALUES ($1) RETURNING *",
+      "INSERT INTO users_table (email) VALUES ($1) RETURNING *",
       [email]
     );
     res.json(newUser.rows[0]);
@@ -83,7 +83,7 @@ routes.put("/users/:id", async (req, res) => {
     const { id } = req.params;
     const { email } = req.body;
     const updatedUser = await client.query(
-      "UPDATE user_table SET email = $1 WHERE user_id = $2",
+      "UPDATE users_table SET email = $1 WHERE user_id = $2",
       [email, id]
     );
     res.json("User was updated");
@@ -100,7 +100,7 @@ routes.delete("/users/:id", async (req, res) => {
 
     const { id } = req.params;
     const deleteUser = await client.query(
-      "DELETE FROM user_table WHERE user_id = $1",
+      "DELETE FROM users_table WHERE user_id = $1",
       [id]
     );
     res.json("User was deleted");
@@ -117,7 +117,7 @@ routes.post("/subreddits", async (req, res) => {
     const client = await connection.connect();
     const { title, image_url, user_id } = req.body;
     const newSubreddit = await client.query(
-      "INSERT INTO subreddit_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
+      "INSERT INTO subreddits_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
       [title, image_url, user_id]
     );
     res.json(newSubreddit.rows[0]);
