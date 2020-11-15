@@ -127,6 +127,22 @@ routes.post("/subreddits", async (req, res) => {
   }
 });
 
+// lists all posts in subreddit
+routes.get("/subreddits/posts", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { subreddit_id } = req.headers;
+    const posts = await client.query(
+      "SELECT * FROM posts_table WHERE subreddit_id = $1",
+      [subreddit_id]
+    );
+    res.json(posts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // posts
 // create a post
 routes.post("/posts", async (req, res) => {
