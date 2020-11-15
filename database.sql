@@ -12,7 +12,8 @@ CREATE TABLE users_table(
 CREATE TABLE subreddits_table (
     subreddit_id SERIAL PRIMARY KEY,
     user_id int,
-    title VARCHAR(40),
+    subreddit_title VARCHAR(40),
+    subreddit_content VARCHAR(500),
     image_url VARCHAR(255),
       CONSTRAINT user_id FOREIGN KEY (user_id)
     REFERENCES users_table (user_id)
@@ -22,8 +23,8 @@ CREATE TABLE posts_table (
     post_id SERIAL PRIMARY KEY,
     user_id int,
     subreddit_id int,
-    title VARCHAR(40),
-    content VARCHAR(500),
+    post_title VARCHAR(40),
+    post_content VARCHAR(500),
     image_url VARCHAR(255),
     upvotes int,
     datetime_created timestamp,
@@ -37,7 +38,7 @@ CREATE TABLE comments_table (
     comment_id SERIAL PRIMARY KEY,
     user_id int,
     post_id int,
-    content VARCHAR(500),
+    comment_content VARCHAR(500),
     upvotes int,
     datetime_created timestamp,
         CONSTRAINT user_id FOREIGN KEY (user_id)

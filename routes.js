@@ -115,10 +115,10 @@ routes.delete("/users/:id", async (req, res) => {
 routes.post("/subreddits", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { title, image_url, user_id } = req.body;
+    const { subreddit_title, image_url, subreddit_content, user_id } = req.body;
     const newSubreddit = await client.query(
-      "INSERT INTO subreddits_table (title, image_url, user_id) VALUES ($1, $2, $3) RETURNING *",
-      [title, image_url, user_id]
+      "INSERT INTO subreddits_table (subreddit_title, image_url, subreddit_content, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [subreddit_title, image_url, subreddit_content, user_id]
     );
     res.json(newSubreddit.rows[0]);
     client.release();
@@ -149,8 +149,8 @@ routes.post("/posts", async (req, res) => {
   try {
     const client = await connection.connect();
     const {
-      title,
-      content,
+      post_title,
+      post_content,
       image_url,
       upvotes,
       datetime_created,
@@ -158,10 +158,10 @@ routes.post("/posts", async (req, res) => {
       subreddit_id,
     } = req.body;
     const newPost = await client.query(
-      "INSERT INTO posts_table (title, content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      "INSERT INTO posts_table (post_title, post_content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
-        title,
-        content,
+        post_title,
+        post_content,
         image_url,
         upvotes,
         datetime_created,
@@ -197,21 +197,7 @@ routes.get("/popular", async (req, res) => {
   try {
     const client = await connection.connect();
     const popularPosts = await client.query(
-      "select * from posts_table order by upvotes desc limit 15"
-    );
-    res.json(popularPosts.rows);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// popular subreddits
-routes.get("/popular2", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const popularPosts = await client.query(
-      "select p.*, s.title from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id order by upvotes desc limit 15"
+      "select p.*, s.subreddit_title from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id order by upvotes desc limit 15"
     );
     res.json(popularPosts.rows);
     client.release();
@@ -225,10 +211,16 @@ routes.get("/popular2", async (req, res) => {
 routes.post("/comments", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { content, upvotes, datetime_created, user_id, post_id } = req.body;
+    const {
+      comment_content,
+      upvotes,
+      datetime_created,
+      user_id,
+      post_id,
+    } = req.body;
     const newComment = await client.query(
-      "INSERT INTO comments_table (content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [content, upvotes, datetime_created, user_id, post_id]
+      "INSERT INTO comments_table (comment_content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [comment_content, upvotes, datetime_created, user_id, post_id]
     );
     res.json(newComment.rows[0]);
     client.release();
