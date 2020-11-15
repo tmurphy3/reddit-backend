@@ -115,10 +115,15 @@ routes.delete("/users/:id", async (req, res) => {
 routes.post("/subreddits", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { subreddit_title, image_url, subreddit_content, user_id } = req.body;
+    const {
+      subreddit_title,
+      subreddit_image,
+      subreddit_content,
+      user_id,
+    } = req.body;
     const newSubreddit = await client.query(
-      "INSERT INTO subreddits_table (subreddit_title, image_url, subreddit_content, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-      [subreddit_title, image_url, subreddit_content, user_id]
+      "INSERT INTO subreddits_table (subreddit_title, subreddit_image, subreddit_content, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [subreddit_title, subreddit_image, subreddit_content, user_id]
     );
     res.json(newSubreddit.rows[0]);
     client.release();
@@ -151,20 +156,20 @@ routes.post("/posts", async (req, res) => {
     const {
       post_title,
       post_content,
-      image_url,
-      upvotes,
-      datetime_created,
+      post_image,
+      post_upvotes,
+      post_timestamp,
       user_id,
       subreddit_id,
     } = req.body;
     const newPost = await client.query(
-      "INSERT INTO posts_table (post_title, post_content, image_url, upvotes, datetime_created, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      "INSERT INTO posts_table (post_title, post_content, post_image, post_upvotes, post_timestamp, user_id, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
         post_title,
         post_content,
-        image_url,
-        upvotes,
-        datetime_created,
+        post_image,
+        post_upvotes,
+        post_timestamp,
         user_id,
         subreddit_id,
       ]
@@ -213,14 +218,14 @@ routes.post("/comments", async (req, res) => {
     const client = await connection.connect();
     const {
       comment_content,
-      upvotes,
-      datetime_created,
+      comment_upvotes,
+      comment_timestamp,
       user_id,
       post_id,
     } = req.body;
     const newComment = await client.query(
-      "INSERT INTO comments_table (comment_content, upvotes, datetime_created, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [comment_content, upvotes, datetime_created, user_id, post_id]
+      "INSERT INTO comments_table (comment_content, comment_upvotes, comment_timestamp, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [comment_content, comment_upvotes, comment_timestamp, user_id, post_id]
     );
     res.json(newComment.rows[0]);
     client.release();
