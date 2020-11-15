@@ -192,6 +192,20 @@ routes.get("/subreddits/posts/comments", async (req, res) => {
   }
 });
 
+// popular subreddits
+routes.get("/popular", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const popularPosts = await client.query(
+      "select * from posts_table order by upvotes desc limit 5"
+    );
+    res.json(popularPosts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // comments
 // create a comment
 routes.post("/comments", async (req, res) => {
