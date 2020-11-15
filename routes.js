@@ -176,6 +176,22 @@ routes.post("/posts", async (req, res) => {
   }
 });
 
+// lists all comments in post
+routes.get("/subreddits/posts/comments", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { post_id } = req.headers;
+    const comments = await client.query(
+      "SELECT * FROM posts_table WHERE post_id = $1",
+      [post_id]
+    );
+    res.json(comments.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // comments
 // create a comment
 routes.post("/comments", async (req, res) => {
