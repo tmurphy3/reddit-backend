@@ -4,9 +4,7 @@ const { Pool } = require("pg");
 // connection
 const connection = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: process.env.DATABASE_URL ? true : false,
 });
 
 routes.get("/", (req, res) => {
@@ -111,6 +109,19 @@ routes.delete("/users/:id", async (req, res) => {
 });
 
 // subreddits
+//get all subreddits
+routes.get("/subreddits", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const allSubreddits = await client.query(
+      "SELECT subreddit_title FROM subreddits_table"
+    );
+    res.json(allSubreddits.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 // create a subreddit
 routes.post("/subreddits", async (req, res) => {
   try {
