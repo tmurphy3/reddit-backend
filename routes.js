@@ -126,6 +126,22 @@ routes.get("/user/posts", async (req, res) => {
   }
 });
 
+///////
+routes.get("/user/posts2", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { user_id } = req.headers;
+    const usersPosts = await client.query(
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id WHERE p.user_id = $1",
+      [user_id]
+    );
+    res.json(usersPosts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // subreddits
 //get all subreddits
 routes.get("/subreddits", async (req, res) => {
