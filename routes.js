@@ -230,7 +230,7 @@ routes.get("/popular", async (req, res) => {
   try {
     const client = await connection.connect();
     const popularPosts = await client.query(
-      "select p.*, s.subreddit_title from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id order by p.post_upvotes desc nulls last limit 15"
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id order by p.post_upvotes desc nulls last limit 15"
     );
     res.json(popularPosts.rows);
     client.release();
