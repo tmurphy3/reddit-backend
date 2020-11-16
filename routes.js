@@ -114,7 +114,7 @@ routes.delete("/users/:id", async (req, res) => {
 routes.get("/user/posts", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { user_id } = req.params;
+    const { user_id } = req.headers;
     const usersPosts = await client.query(
       "SELECT * FROM posts_table WHERE user_id = $1",
       [user_id]
