@@ -110,6 +110,22 @@ routes.delete("/users/:id", async (req, res) => {
   }
 });
 
+// all posts by user
+routes.get("/user/posts", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { user_id } = req.body;
+    const usersPosts = await client.query(
+      "SELECT * FROM posts_table WHERE user_id = $1",
+      [user_id]
+    );
+    res.json(usersPosts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // subreddits
 //get all subreddits
 routes.get("/subreddits", async (req, res) => {
