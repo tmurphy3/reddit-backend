@@ -113,15 +113,14 @@ routes.delete("/users/:id", async (req, res) => {
 routes.get("/subreddits", async (req, res) => {
   try {
     const client = await connection.connect();
-    const allSubreddits = await client.query(
-      "SELECT subreddit_title FROM subreddits_table"
-    );
+    const allSubreddits = await client.query("SELECT * FROM subreddits_table");
     res.json(allSubreddits.rows);
     client.release();
   } catch (err) {
     console.error(err.message);
   }
 });
+
 // create a subreddit
 routes.post("/subreddits", async (req, res) => {
   try {
