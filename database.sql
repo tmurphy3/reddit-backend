@@ -12,7 +12,7 @@ CREATE TABLE users_table(
 CREATE TABLE subreddits_table (
     subreddit_id SERIAL PRIMARY KEY,
     user_id int,
-    subreddit_title VARCHAR(40),
+    subreddit_title VARCHAR(40) NOT NULL UNIQUE,
     subreddit_content VARCHAR(500),
     subreddit_image VARCHAR(255),
       CONSTRAINT user_id FOREIGN KEY (user_id)
