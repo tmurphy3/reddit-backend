@@ -140,6 +140,17 @@ routes.get("/subreddits", async (req, res) => {
 });
 
 // get one subreddit
+routes.get("/subreddits/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const user = await client.query("", [id]);
+    res.json(user.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // create a subreddit
 routes.post("/subreddits", async (req, res) => {
@@ -163,7 +174,7 @@ routes.post("/subreddits", async (req, res) => {
 });
 
 // lists all posts in subreddit
-routes.get("/subreddits/posts", async (req, res) => {
+routes.get("/subreddit/posts", async (req, res) => {
   try {
     const client = await connection.connect();
     const { subreddit_id } = req.headers;
