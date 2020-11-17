@@ -139,6 +139,19 @@ routes.get("/subreddits", async (req, res) => {
   }
 });
 
+// get one subreddit
+routes.get("/subreddits/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const user = await client.query("", [id]);
+    res.json(user.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // create a subreddit
 routes.post("/subreddits", async (req, res) => {
   try {
@@ -167,6 +180,8 @@ routes.get("/subreddits/posts", async (req, res) => {
     const { subreddit_id } = req.headers;
     const posts = await client.query(
       "SELECT * FROM posts_table WHERE subreddit_id = $1",
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id WHERE p.user_id = $1",
+
       [subreddit_id]
     );
     res.json(posts.rows);
@@ -230,7 +245,7 @@ routes.get("/popular", async (req, res) => {
   try {
     const client = await connection.connect();
     const popularPosts = await client.query(
-      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id order by p.post_upvotes desc nulls last limit 15"
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = p.user_id order by p.post_upvotes desc nulls last limit 15"
     );
     res.json(popularPosts.rows);
     client.release();
