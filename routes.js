@@ -164,10 +164,10 @@ routes.post("/subreddits", async (req, res) => {
 routes.get("/subreddits/posts", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { subreddit_id } = req.headers;
+    const { x } = req.headers;
     const posts = await client.query(
-      "select p.*, s.subreddit_title from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id where subreddit_id = $1"[
-        subreddit_id
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id and x = $1 join users_table u on u.user_id = s.user_id order by p.post_upvotes desc nulls last"[
+        x
       ]
     );
     res.json(posts.rows);
