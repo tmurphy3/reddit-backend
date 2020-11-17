@@ -116,7 +116,7 @@ routes.get("/user/posts", async (req, res) => {
     const client = await connection.connect();
     const { user_id } = req.headers;
     const usersPosts = await client.query(
-      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = s.user_id WHERE p.user_id = $1",
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = p.user_id WHERE p.user_id = $1",
       [user_id]
     );
     res.json(usersPosts.rows);
