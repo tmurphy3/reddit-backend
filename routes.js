@@ -223,7 +223,7 @@ routes.post("/posts", async (req, res) => {
 });
 
 // lists all comments in post
-routes.get("/subreddits/posts/comments", async (req, res) => {
+routes.get("/subreddit/post/comments", async (req, res) => {
   try {
     const client = await connection.connect();
     const { post_id } = req.headers;
