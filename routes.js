@@ -153,7 +153,7 @@ routes.get("/subreddits/:id", async (req, res) => {
 });
 
 // popular subreddits
-routes.get("/subreddit/posts", async (req, res) => {
+routes.get("/trending", async (req, res) => {
   try {
     const client = await connection.connect();
     const posts = await client.query(
