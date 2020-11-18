@@ -152,6 +152,20 @@ routes.get("/subreddits/:id", async (req, res) => {
   }
 });
 
+// popular subreddits
+routes.get("/subreddit/posts", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const posts = await client.query(
+      "select COUNT(p.subreddit_id), s.subreddit_title from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id GROUP BY s.subreddit_id"
+    );
+    res.json(posts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // create a subreddit
 routes.post("/subreddits", async (req, res) => {
   try {
@@ -238,7 +252,7 @@ routes.get("/subreddit/post/comments", async (req, res) => {
   }
 });
 
-// popular subreddits
+// popular posts
 routes.get("/popular", async (req, res) => {
   try {
     const client = await connection.connect();
