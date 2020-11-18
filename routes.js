@@ -144,7 +144,10 @@ routes.get("/subreddits/:id", async (req, res) => {
   try {
     const client = await connection.connect();
     const { id } = req.params;
-    const user = await client.query("", [id]);
+    const user = await client.query(
+      "select * from subreddits_table where subreddit_id = $1",
+      [id]
+    );
     res.json(user.rows);
     client.release();
   } catch (err) {
@@ -204,6 +207,22 @@ routes.get("/subreddit/posts", async (req, res) => {
 });
 
 // posts
+// get one subreddit
+routes.get("/posts/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const user = await client.query(
+      "select * from posts_table where post_id = $1",
+      [id]
+    );
+    res.json(user.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // create a post
 routes.post("/posts", async (req, res) => {
   try {
