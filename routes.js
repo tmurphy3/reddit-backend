@@ -261,7 +261,7 @@ routes.get("/subreddit/post/comments", async (req, res) => {
     const client = await connection.connect();
     const { post_id } = req.headers;
     const comments = await client.query(
-      "SELECT * FROM comments_table WHERE post_id = $1",
+      "select c.*, u.email from comments_table c join users_table u on c.user_id = u.user_id and c.post_id = $1",
       [post_id]
     );
     res.json(comments.rows);
