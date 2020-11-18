@@ -157,7 +157,7 @@ routes.get("/trending", async (req, res) => {
   try {
     const client = await connection.connect();
     const posts = await client.query(
-      "select COUNT(p.subreddit_id), s.subreddit_title from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id GROUP BY s.subreddit_id"
+      "select COUNT(p.subreddit_id), s.subreddit_title from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id GROUP BY s.subreddit_id order by COUNT(p.subreddit_id) desc nulls last limit 5"
     );
     res.json(posts.rows);
     client.release();
