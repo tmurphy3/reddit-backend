@@ -323,4 +323,18 @@ routes.post("/upvotepost", async (req, res) => {
   }
 });
 
+routes.get("/upvotepost", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { user_id, post_id } = req.body;
+    const newComment = await client.query(
+      "select * from posts_upvotes_table where user_id = 1 and post_id = $2",
+      [user_id, post_id]
+    );
+    res.json(newComment.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 module.exports = routes;
