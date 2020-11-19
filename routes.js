@@ -328,7 +328,7 @@ routes.get("/upvotepost", async (req, res) => {
     const client = await connection.connect();
     const { user_id, post_id } = req.body;
     const newComment = await client.query(
-      "select * from posts_upvotes_table where user_id = 1 and post_id = $2",
+      "select * from posts_upvotes_table where user_id = $1 and post_id = $2",
       [user_id, post_id]
     );
     res.json(newComment.rows);
