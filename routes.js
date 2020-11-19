@@ -116,7 +116,7 @@ routes.get("/user/posts", async (req, res) => {
     const client = await connection.connect();
     const { user_id } = req.headers;
     const usersPosts = await client.query(
-      "select p.*, s.subreddit_title, u.email, count(case when posts_upvotes_table.upvote = 1 then 1 end), count( case when posts_upvotes_table.downvote = 1 then 1 end), from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = p.user_id left join posts_upvotes_table on posts_upvotes_table.post_id = p.post_id WHERE p.user_id = $1",
+      "select p.*, s.subreddit_title, u.email from posts_table p join subreddits_table s on p.subreddit_id = s.subreddit_id join users_table u on u.user_id = p.user_id WHERE p.user_id = $1",
       [user_id]
     );
     res.json(usersPosts.rows);
@@ -308,30 +308,21 @@ routes.post("/comments", async (req, res) => {
   }
 });
 
-routes.post("/upvotepost", async (req, res) => {
+routes.post("/comments", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { user_id, post_id, upvote, downvote } = req.body;
+    const {
+      comment_content,
+      comment_upvotes,
+      comment_timestamp,
+      user_id,
+      post_id,
+    } = req.body;
     const newComment = await client.query(
-      "INSERT INTO posts_upvotes_table (user_id, post_id, upvote, downvote) VALUES ($1, $2, $3, $4) RETURNING *",
-      [user_id, post_id, upvote, downvote]
+      "INSERT INTO comments_table (comment_content, comment_upvotes, comment_timestamp, user_id, post_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [comment_content, comment_upvotes, comment_timestamp, user_id, post_id]
     );
     res.json(newComment.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-routes.get("/upvotepost", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const { user_id, post_id } = req.body;
-    const newComment = await client.query(
-      "select * from posts_upvotes_table where user_id = $1 and post_id = $2",
-      [user_id, post_id]
-    );
-    res.json(newComment.rows);
     client.release();
   } catch (err) {
     console.error(err.message);
