@@ -308,4 +308,19 @@ routes.post("/comments", async (req, res) => {
   }
 });
 
+routes.post("/upvotepost", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { user_id, post_id, upvote, downvote } = req.body;
+    const newComment = await client.query(
+      "INSERT INTO posts_upvotes_table (user_id, post_id, upvote, user_id, downvote) VALUES ($1, $2, $3, $4) RETURNING *",
+      [user_id, post_id, upvote, downvote]
+    );
+    res.json(newComment.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = routes;

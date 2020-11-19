@@ -46,3 +46,15 @@ CREATE TABLE comments_table (
         CONSTRAINT post_id FOREIGN KEY (post_id)
     REFERENCES posts_table (post_id)
 );
+
+CREATE TABLE posts_upvotes_table (
+    upvote_id SERIAL PRIMARY KEY,
+    user_id int,
+    post_id int,
+    upvote bit,
+    downvote bit,
+        CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES users_table (user_id),
+        CONSTRAINT post_id FOREIGN KEY (post_id)
+    REFERENCES posts_table (post_id)
+);
