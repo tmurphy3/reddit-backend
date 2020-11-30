@@ -207,7 +207,7 @@ routes.get("/subreddit/posts", async (req, res) => {
 });
 
 // posts
-// get one subreddit
+// get one post
 routes.get("/posts/:id", async (req, res) => {
   try {
     const client = await connection.connect();
@@ -249,6 +249,23 @@ routes.post("/posts", async (req, res) => {
       ]
     );
     res.json(newPost.rows[0]);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// update a post
+routes.put("/post/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const { upvotes } = req.body;
+    const updatedPost = await client.query(
+      "UPDATE posts_table SET post_upvotes = $1 WHERE post_id = $2",
+      [upvotes, id]
+    );
+    res.json("post was updated");
     client.release();
   } catch (err) {
     console.error(err.message);
