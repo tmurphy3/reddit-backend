@@ -256,7 +256,7 @@ routes.post("/posts", async (req, res) => {
 });
 
 // update a post
-routes.put("/post/:id", async (req, res) => {
+routes.put("/posts/:id", async (req, res) => {
   try {
     const client = await connection.connect();
     const { id } = req.params;
