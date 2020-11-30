@@ -260,10 +260,10 @@ routes.put("/posts/:id", async (req, res) => {
   try {
     const client = await connection.connect();
     const { id } = req.params;
-    const { upvotes } = req.body;
+    const { post_upvotes } = req.body;
     const updatedPost = await client.query(
       "UPDATE posts_table SET post_upvotes = $1 WHERE post_id = $2",
-      [upvotes, id]
+      [post_upvotes, id]
     );
     res.json("post was updated");
     client.release();
