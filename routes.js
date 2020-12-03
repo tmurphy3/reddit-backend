@@ -346,4 +346,20 @@ routes.post("/comments", async (req, res) => {
   }
 });
 
+routes.put("/comments/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const { comment_upvotes } = req.body;
+    const updatedComment = await client.query(
+      "UPDATE comments_table SET comment_upvotes = $1 WHERE comment_id = $2",
+      [comment_upvotes, id]
+    );
+    res.json("comment was updated");
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = routes;
