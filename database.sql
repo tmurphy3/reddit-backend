@@ -24,7 +24,7 @@ CREATE TABLE posts_table (
     user_id int,
     subreddit_id int,
     post_title VARCHAR(40),
-    post_content VARCHAR(500),
+    post_content VARCHAR(2000),
     post_image VARCHAR(255),
     post_upvotes int,
     post_timestamp VARCHAR(255),
@@ -38,7 +38,7 @@ CREATE TABLE comments_table (
     comment_id SERIAL PRIMARY KEY,
     user_id int,
     post_id int,
-    comment_content VARCHAR(500),
+    comment_content VARCHAR(2000),
     comment_upvotes int,
     comment_timestamp VARCHAR(255),
         CONSTRAINT user_id FOREIGN KEY (user_id)
