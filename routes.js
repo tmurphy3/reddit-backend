@@ -145,7 +145,7 @@ routes.get("/subreddits/:id", async (req, res) => {
     const client = await connection.connect();
     const { id } = req.params;
     const user = await client.query(
-      "select s.* from subreddits_table where subreddit_id = $1",
+      "select * from subreddits_table where subreddit_id = $1",
       [id]
     );
     res.json(user.rows);
