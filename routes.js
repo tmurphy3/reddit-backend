@@ -145,9 +145,8 @@ routes.get("/subreddits/:id", async (req, res) => {
     const client = await connection.connect();
     const { id } = req.params;
     const user = await client.query(
-      "select COUNT(p.subreddit_id), s.subreddit_title, s.subreddit_id from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id GROUP BY s.subreddit_id where s.subreddit_id = $1"[
-        id
-      ]
+      "select COUNT(p.subreddit_id), s.subreddit_title, s.subreddit_id from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id GROUP BY s.subreddit_id where s.subreddit_id = $1",
+      [id]
     );
     res.json(user.rows);
     client.release();
