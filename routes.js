@@ -145,21 +145,6 @@ routes.get("/subreddits/:id", async (req, res) => {
     const client = await connection.connect();
     const { id } = req.params;
     const user = await client.query(
-      "select * from subreddits_table where subreddit_id = $1",
-      [id]
-    );
-    res.json(user.rows);
-    client.release();
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-routes.get("/subredditsx/:id", async (req, res) => {
-  try {
-    const client = await connection.connect();
-    const { id } = req.params;
-    const user = await client.query(
       "select s.*, COUNT(p.subreddit_id), s.subreddit_id from posts_table p join subreddits_table s on s.subreddit_id = p.subreddit_id where s.subreddit_id = $1 group by s.subreddit_id",
       [id]
     );
