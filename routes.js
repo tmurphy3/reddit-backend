@@ -208,10 +208,10 @@ routes.get("/subreddit/posts", async (req, res) => {
 routes.get("/post/:id", async (req, res) => {
   try {
     const client = await connection.connect();
-    const { post_id } = req.params;
+    const { id } = req.params;
     const comments = await client.query(
       "select p.*, COUNT(c.post_id) from posts_table p join comments_table c on p.post_id = c.post_id where p.post_id = $1 group by p.post_id",
-      [post_id]
+      [id]
     );
     res.json(comments.rows);
     client.release();
@@ -219,17 +219,18 @@ routes.get("/post/:id", async (req, res) => {
     console.error(err.message);
   }
 });
+
 // posts
 // get one post
 routes.get("/posts/:id", async (req, res) => {
   try {
     const client = await connection.connect();
     const { id } = req.params;
-    const user = await client.query(
+    const posts = await client.query(
       "select p.*, s.subreddit_title, u.email from posts_table p join users_table u on p.user_id = u.user_id join subreddits_table s on s.subreddit_id = p.subreddit_id and p.post_id = $1",
       [id]
     );
-    res.json(user.rows);
+    res.json(posts.rows);
     client.release();
   } catch (err) {
     console.error(err.message);
