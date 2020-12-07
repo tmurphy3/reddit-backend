@@ -210,7 +210,7 @@ routes.get("/post/:id", async (req, res) => {
     const client = await connection.connect();
     const { id } = req.params;
     const comments = await client.query(
-      "select p.*, COUNT(c.post_id) from posts_table p join comments_table c on p.post_id = c.post_id where p.post_id = $1 group by p.post_id",
+      "select p.*, COUNT(c.post_id) as comments from posts_table p join comments_table c on p.post_id = c.post_id where p.post_id = $1 group by p.post_id",
       [id]
     );
     res.json(comments.rows);
