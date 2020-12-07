@@ -205,6 +205,20 @@ routes.get("/subreddit/posts", async (req, res) => {
   }
 });
 
+routes.get("/subreddit/postsx", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { subreddit_id } = req.headers;
+    const posts = await client.query(
+      "select p.*, COUNT(c.subreddit_id), s.subreddit_title, s.subreddit_content, s.subreddit_image, u.email from posts_table p join users_table u on p.user_id = u.user_id join subreddits_table s on s.subreddit_id = p.subreddit_id join comments_table c on c.subreddit_id = p.subreddit_id where p.subreddit_id = $1",
+      [subreddit_id]
+    );
+    res.json(posts.rows);
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 // posts
 // get one post
 routes.get("/posts/:id", async (req, res) => {
