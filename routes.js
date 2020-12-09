@@ -49,7 +49,7 @@ routes.get("/users/:id", async (req, res) => {
 
     const { id } = req.params;
     const user = await client.query(
-      "SELECT u.*, COUNT(p.user_id) FROM users_table u join posts_table p on u.user_id = p.user_id WHERE user_id = $1 group by p.user_id",
+      "SELECT u.*, COUNT(p.user_id) FROM users_table u join posts_table p on u.user_id = p.user_id WHERE u.user_id = $1 group by p.user_id",
       [id]
     );
     res.json(user.rows);
