@@ -4,45 +4,44 @@ GRANT ALL PRIVILEGES ON DATABASE DB_NAME TO DB_USER;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO DB_USER;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to DB_USER;
 
-CREATE TABLE users_table(
+CREATE TABLE user_table(
     user_id SERIAL PRIMARY KEY,
     email VARCHAR(40) NOT NULL UNIQUE
 );
 
-CREATE TABLE subreddits_table (
+CREATE TABLE subreddit_table (
     subreddit_id SERIAL PRIMARY KEY,
     user_id int,
-    subreddit_title VARCHAR(40),
-    subreddit_content VARCHAR(500),
-    subreddit_image VARCHAR(255),
+    title VARCHAR(40),
+    image_url VARCHAR(255),
       CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id)
+    REFERENCES user_table (user_id)
 );
 
 CREATE TABLE posts_table (
     post_id SERIAL PRIMARY KEY,
     user_id int,
     subreddit_id int,
-    post_title VARCHAR(40),
-    post_content VARCHAR(500),
-    post_image VARCHAR(255),
-    post_upvotes int,
-    post_timestamp VARCHAR(255),
+    title VARCHAR(40),
+    content VARCHAR(500),
+    image_url VARCHAR(255),
+    upvotes int,
+    datetime_created timestamp,
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id),
+    REFERENCES user_table (user_id),
         CONSTRAINT subreddit_id FOREIGN KEY (subreddit_id)
-    REFERENCES subreddits_table (subreddit_id)
+    REFERENCES subreddit_table (subreddit_id)
 );
 
 CREATE TABLE comments_table (
     comment_id SERIAL PRIMARY KEY,
     user_id int,
     post_id int,
-    comment_content VARCHAR(500),
-    comment_upvotes int,
-    comment_timestamp VARCHAR(255),
+    content VARCHAR(500),
+    upvotes int,
+    datetime_created timestamp,
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id),
+    REFERENCES user_table (user_id),
         CONSTRAINT post_id FOREIGN KEY (post_id)
     REFERENCES posts_table (post_id)
 );
