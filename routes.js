@@ -269,7 +269,7 @@ routes.post("/posts", async (req, res) => {
   }
 });
 
-// update a post
+// update a post (for upvotes)
 routes.put("/posts/:id", async (req, res) => {
   try {
     const client = await connection.connect();
@@ -280,6 +280,23 @@ routes.put("/posts/:id", async (req, res) => {
       [post_upvotes, id]
     );
     res.json("post was updated");
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// update a post (for editing info)
+routes.get("/post/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const { post_title, post_content, post_image } = req.body;
+    const updatedPost = await client.query(
+      "UPDATE posts_table SET post_title = $1, post_content = $2, post_image = $3 WHERE post_id = $4",
+      [post_title, post_content, post_image, id]
+    );
+    res.json("Post was updated");
     client.release();
   } catch (err) {
     console.error(err.message);
