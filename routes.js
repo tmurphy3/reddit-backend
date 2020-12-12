@@ -372,6 +372,7 @@ routes.post("/comments", async (req, res) => {
   }
 });
 
+// update comment (upvotes)
 routes.put("/comments/:id", async (req, res) => {
   try {
     const client = await connection.connect();
@@ -382,6 +383,22 @@ routes.put("/comments/:id", async (req, res) => {
       [comment_upvotes, id]
     );
     res.json("comment was updated");
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete a comment
+routes.delete("/comments/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const deleteComment = await client.query(
+      "DELETE FROM comments_table WHERE comment_id = $1",
+      [id]
+    );
+    res.json("Comment was deleted");
     client.release();
   } catch (err) {
     console.error(err.message);
