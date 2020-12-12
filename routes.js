@@ -287,7 +287,7 @@ routes.put("/posts/:id", async (req, res) => {
 });
 
 // update a post (for editing info)
-routes.get("/post/:id", async (req, res) => {
+routes.put("/post/:id", async (req, res) => {
   try {
     const client = await connection.connect();
     const { id } = req.params;
