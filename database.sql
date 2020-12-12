@@ -16,7 +16,7 @@ CREATE TABLE subreddits_table (
     subreddit_content VARCHAR(2000),
     subreddit_image TEXT,
       CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id)
+    REFERENCES users_table (user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE posts_table (
@@ -29,9 +29,9 @@ CREATE TABLE posts_table (
     post_upvotes int,
     post_timestamp VARCHAR(255),
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id),
+    REFERENCES users_table (user_id) ON DELETE CASCADE,
         CONSTRAINT subreddit_id FOREIGN KEY (subreddit_id)
-    REFERENCES subreddits_table (subreddit_id)
+    REFERENCES subreddits_table (subreddit_id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments_table (
@@ -42,7 +42,7 @@ CREATE TABLE comments_table (
     comment_upvotes int,
     comment_timestamp VARCHAR(255),
         CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES users_table (user_id),
+    REFERENCES users_table (user_id) ON DELETE CASCADE,
         CONSTRAINT post_id FOREIGN KEY (post_id)
-    REFERENCES posts_table (post_id)
+    REFERENCES posts_table (post_id) ON DELETE CASCADE
 );
