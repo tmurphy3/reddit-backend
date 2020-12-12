@@ -6,15 +6,15 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to DB_USER;
 
 CREATE TABLE users_table(
     user_id SERIAL PRIMARY KEY,
-    email VARCHAR(40) NOT NULL UNIQUE
+    email VARCHAR(60) NOT NULL UNIQUE
 );
 
 CREATE TABLE subreddits_table (
     subreddit_id SERIAL PRIMARY KEY,
     user_id int,
-    subreddit_title VARCHAR(200),
+    subreddit_title VARCHAR(2000),
     subreddit_content VARCHAR(2000),
-    subreddit_image VARCHAR(255),
+    subreddit_image TEXT,
       CONSTRAINT user_id FOREIGN KEY (user_id)
     REFERENCES users_table (user_id)
 );
@@ -23,9 +23,9 @@ CREATE TABLE posts_table (
     post_id SERIAL PRIMARY KEY,
     user_id int,
     subreddit_id int,
-    post_title VARCHAR(1000),
+    post_title VARCHAR(2000),
     post_content VARCHAR(2000),
-    post_image VARCHAR(255),
+    post_image TEXT,
     post_upvotes int,
     post_timestamp VARCHAR(255),
         CONSTRAINT user_id FOREIGN KEY (user_id)
