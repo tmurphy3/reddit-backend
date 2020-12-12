@@ -286,6 +286,22 @@ routes.put("/posts/:id", async (req, res) => {
   }
 });
 
+// delete a post
+routes.delete("/posts/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const deletePost = await client.query(
+      "DELETE FROM posts_table WHERE post_id = $1",
+      [id]
+    );
+    res.json("Post was deleted");
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // lists all comments in post
 routes.get("/subreddit/post/comments", async (req, res) => {
   try {
