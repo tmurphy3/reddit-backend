@@ -167,7 +167,7 @@ routes.delete("/subreddits/:id", async (req, res) => {
     const client = await connection.connect();
     const { id } = req.params;
     const deleteSubreddit = await client.query(
-      "DELETE FROM posts_table WHERE subreddit_id = $1",
+      "DELETE FROM subreddits_table WHERE subreddit_id = $1",
       [id]
     );
     res.json("Subreddit was deleted");
