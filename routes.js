@@ -161,6 +161,22 @@ routes.post("/subreddits", async (req, res) => {
   }
 });
 
+// delete a subreddit
+routes.delete("/subreddits/:id", async (req, res) => {
+  try {
+    const client = await connection.connect();
+    const { id } = req.params;
+    const deleteSubreddit = await client.query(
+      "DELETE FROM posts_table WHERE subreddit_id = $1",
+      [id]
+    );
+    res.json("Subreddit was deleted");
+    client.release();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // posts
 // get one post
 routes.get("/posts/:id", async (req, res) => {
